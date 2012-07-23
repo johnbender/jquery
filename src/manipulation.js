@@ -314,16 +314,16 @@ jQuery.extend({
 
 		// We can't cloneNode fragments that contain checked, in WebKit
 		if ( !jQuery.support.checkClone && l > 1 && typeof value === "string" && rchecked.test( value ) ) {
-			return set.each(function() {
-				jQuery(this).domManip( args, table, callback );
+			return jQuery.each(set, function() {
+				jQuery.domManip( [this], args, table, callback );
 			});
 		}
 
 		if ( jQuery.isFunction(value) ) {
-			return set.each(function(i) {
+			return jQuery.each(set, function(i) {
 				var self = jQuery(this);
 				args[0] = value.call( this, i, table ? self.html() : undefined );
-				self.domManip( args, table, callback );
+				jQuery.domManip( [this], args, table, callback );
 			});
 		}
 
