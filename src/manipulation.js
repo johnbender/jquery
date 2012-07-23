@@ -297,7 +297,12 @@ jQuery.fn.extend({
 	},
 
 	domManip: function( args, table, callback ) {
+		return jQuery.domManip( this, args, table, callback );
+	}
+});
 
+jQuery.extend({
+	domManip: function( set, args, table, callback ) {
 		// Flatten any nested arrays
 		args = [].concat.apply( [], args );
 
@@ -305,25 +310,25 @@ jQuery.fn.extend({
 			i = 0,
 			value = args[0],
 			scripts = [],
-			l = this.length;
+			l = set.length;
 
 		// We can't cloneNode fragments that contain checked, in WebKit
 		if ( !jQuery.support.checkClone && l > 1 && typeof value === "string" && rchecked.test( value ) ) {
-			return this.each(function() {
+			return set.each(function() {
 				jQuery(this).domManip( args, table, callback );
 			});
 		}
 
 		if ( jQuery.isFunction(value) ) {
-			return this.each(function(i) {
+			return set.each(function(i) {
 				var self = jQuery(this);
 				args[0] = value.call( this, i, table ? self.html() : undefined );
 				self.domManip( args, table, callback );
 			});
 		}
 
-		if ( this[0] ) {
-			results = jQuery.buildFragment( args, this, scripts );
+		if ( set[0] ) {
+			results = jQuery.buildFragment( args, set, scripts );
 			fragment = results.fragment;
 			first = fragment.firstChild;
 
@@ -339,9 +344,9 @@ jQuery.fn.extend({
 				// Fragments from the fragment cache must always be cloned and never used in place.
 				for ( iNoClone = results.cacheable || l - 1; i < l; i++ ) {
 					callback.call(
-						table && jQuery.nodeName( this[i], "table" ) ?
-							findOrAppend( this[i], "tbody" ) :
-							this[i],
+						table && jQuery.nodeName( set[i], "table" ) ?
+							findOrAppend( set[i], "tbody" ) :
+							set[i],
 						i === iNoClone ?
 							fragment :
 							jQuery.clone( fragment, true, true )
@@ -362,7 +367,7 @@ jQuery.fn.extend({
 								dataType: "script",
 								async: false,
 								global: false,
-								throws: true
+								'throws': true
 							});
 						} else {
 							jQuery.error("no ajax");
@@ -378,7 +383,7 @@ jQuery.fn.extend({
 			}
 		}
 
-		return this;
+		return set;
 	}
 });
 
