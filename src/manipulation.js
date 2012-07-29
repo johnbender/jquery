@@ -126,11 +126,9 @@ jQuery.fn.extend({
 	},
 
 	append: function() {
-		return this.domManip(arguments, true, function( elem ) {
-			if ( this.nodeType === 1 || this.nodeType === 11 ) {
-				this.appendChild( elem );
-			}
-		});
+		var args = Array.prototype.slice.call( arguments );
+		args.unshift( this );
+		return jQuery.append.apply( this, args );
 	},
 
 	prepend: function() {
@@ -193,15 +191,7 @@ jQuery.fn.extend({
 			i = 0;
 
 		for ( ; (elem = this[i]) != null; i++ ) {
-			// Remove element nodes and prevent memory leaks
-			if ( elem.nodeType === 1 ) {
-				jQuery.cleanData( elem.getElementsByTagName("*") );
-			}
-
-			// Remove any remaining nodes
-			while ( elem.firstChild ) {
-				elem.removeChild( elem.firstChild );
-			}
+			jQuery.empty( elem );
 		}
 
 		return this;
@@ -264,6 +254,28 @@ jQuery.fn.extend({
 });
 
 jQuery.extend({
+	append: function( set, a, b, c ) {
+		return jQuery.domManip(set, [a, b, c], true, function( elem ) {
+			if ( this.nodeType === 1 || this.nodeType === 11 ) {
+				this.appendChild( elem );
+			}
+		});
+	},
+
+	empty: function( elem ) {
+		// Remove element nodes and prevent memory leaks
+		if ( elem.nodeType === 1 ) {
+			jQuery.cleanData( elem.getElementsByTagName("*") );
+		}
+
+		// Remove any remaining nodes
+		while ( elem.firstChild ) {
+			elem.removeChild( elem.firstChild );
+		}
+
+		return elem;
+	},
+
 	html: function( set, value ) {
 		return jQuery.access( set, function( value ) {
 			var elem = this[0] || {},
@@ -301,7 +313,12 @@ jQuery.extend({
 			}
 
 			if ( elem ) {
-				this.empty().append( value );
+				for (; i < l; i++ ) {
+					// clean each element in the set
+					jQuery.empty(this[i] || {});
+				}
+
+				jQuery.append( set, value );
 			}
 		}, null, value, arguments.length - 1);
 	},
