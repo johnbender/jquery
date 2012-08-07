@@ -171,16 +171,7 @@ jQuery.fn.extend({
 			i = 0;
 
 		for ( ; (elem = this[i]) != null; i++ ) {
-			if ( !selector || jQuery.filter( selector, [ elem ] ).length ) {
-				if ( !keepData && elem.nodeType === 1 ) {
-					jQuery.cleanData( elem.getElementsByTagName("*") );
-					jQuery.cleanData( [ elem ] );
-				}
-
-				if ( elem.parentNode ) {
-					elem.parentNode.removeChild( elem );
-				}
-			}
+			jQuery.remove( elem, selector, keepData );
 		}
 
 		return this;
@@ -249,13 +240,28 @@ jQuery.fn.extend({
 	},
 
 	html: function( value ) {
-		return arguments.length === 0 ? jQuery.html(this) : jQuery.html( this, value );
+		return arguments.length === 0 ? jQuery.html( this ) : jQuery.html( this, value );
 	}
 });
 
 jQuery.extend({
+	remove: function( elem, selector, keepData ) {
+		if ( !selector || jQuery.filter( selector, [ elem ] ).length ) {
+			if ( !keepData && elem.nodeType === 1 ) {
+				jQuery.cleanData( elem.getElementsByTagName("*") );
+				jQuery.cleanData( [ elem ] );
+			}
+
+			if ( elem.parentNode ) {
+				elem.parentNode.removeChild( elem );
+			}
+		}
+	},
+
 	append: function( set, a, b, c ) {
-		return jQuery.domManip(set, [a, b, c], true, function( elem ) {
+		var args = Array.prototype.slice.call( arguments, 1 );
+
+		return jQuery.domManip(arguments[0], args, true, function( elem ) {
 			if ( this.nodeType === 1 || this.nodeType === 11 ) {
 				this.appendChild( elem );
 			}
@@ -276,6 +282,16 @@ jQuery.extend({
 		return elem;
 	},
 
+	getHtml: function( elem ) {
+		return elem.nodeType === 1 ?
+			elem.innerHTML.replace( rinlinejQuery, "" ) :
+			undefined;
+	},
+
+	setHtml: function( elem, value ) {
+		jQuery.html( [elem], value );
+	},
+
 	html: function( set, value ) {
 		return jQuery.access( set, function( value ) {
 			var elem = this[0] || {},
@@ -283,9 +299,7 @@ jQuery.extend({
 				l = this.length;
 
 			if ( value === undefined ) {
-				return elem.nodeType === 1 ?
-					elem.innerHTML.replace( rinlinejQuery, "" ) :
-					undefined;
+				return jQuery.getHtml( elem );
 			}
 
 			// See if we can take a shortcut and just use innerHTML
@@ -313,7 +327,7 @@ jQuery.extend({
 			}
 
 			if ( elem ) {
-				for (; i < l; i++ ) {
+				for (i = 0; i < l; i++ ) {
 					// clean each element in the set
 					jQuery.empty(this[i] || {});
 				}
