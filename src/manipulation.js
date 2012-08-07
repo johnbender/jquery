@@ -171,7 +171,9 @@ jQuery.fn.extend({
 			i = 0;
 
 		for ( ; (elem = this[i]) != null; i++ ) {
-			jQuery.remove( elem, selector, keepData );
+			if ( !selector || jQuery.filter( selector, [ elem ] ).length ) {
+				jQuery.remove( elem, keepData );
+			}
 		}
 
 		return this;
@@ -245,16 +247,14 @@ jQuery.fn.extend({
 });
 
 jQuery.extend({
-	remove: function( elem, selector, keepData ) {
-		if ( !selector || jQuery.filter( selector, [ elem ] ).length ) {
-			if ( !keepData && elem.nodeType === 1 ) {
-				jQuery.cleanData( elem.getElementsByTagName("*") );
-				jQuery.cleanData( [ elem ] );
-			}
+	remove: function( elem, keepData ) {
+		if ( !keepData && elem.nodeType === 1 ) {
+			jQuery.cleanData( elem.getElementsByTagName("*") );
+			jQuery.cleanData( [ elem ] );
+		}
 
-			if ( elem.parentNode ) {
-				elem.parentNode.removeChild( elem );
-			}
+		if ( elem.parentNode ) {
+			elem.parentNode.removeChild( elem );
 		}
 	},
 
