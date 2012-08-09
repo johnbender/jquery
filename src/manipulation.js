@@ -213,16 +213,7 @@ jQuery.fn.extend({
 			}
 
 			return this.each(function() {
-				var next = this.nextSibling,
-					parent = this.parentNode;
-
-				jQuery( this ).remove();
-
-				if ( next ) {
-					jQuery(next).before( value );
-				} else {
-					jQuery(parent).append( value );
-				}
+				jQuery.replaceWith( this, value );
 			});
 		}
 
@@ -245,6 +236,25 @@ jQuery.fn.extend({
 });
 
 jQuery.extend({
+	replaceWith: function( elem, value ) {
+		var next = elem.nextSibling,
+			parent = elem.parentNode;
+
+		jQuery.remove( elem );
+
+		if ( next ) {
+			// TODO deal with the text node directly to avoid dom manip
+			jQuery.domManip([next], [value], false, function( before, elem ) {
+				jQuery.before( elem, before );
+			});
+		} else {
+			// TODO deal with the text node directly to avoid dom manip
+			jQuery.domManip([parent], [value], false, function( append, elem ) {
+				jQuery.append( elem, append );
+			});
+		}
+	},
+
 	before: function( elem, insert ) {
 		elem.parentNode.insertBefore( insert, elem );
 	},
