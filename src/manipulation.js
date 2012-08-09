@@ -247,6 +247,10 @@ jQuery.fn.extend({
 });
 
 jQuery.extend({
+	detach: function( elem ) {
+		jQuery.remove( elem, true );
+	},
+
 	remove: function( elem, keepData ) {
 		if ( !keepData && elem.nodeType === 1 ) {
 			jQuery.cleanData( elem.getElementsByTagName("*") );
