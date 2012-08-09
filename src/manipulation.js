@@ -141,8 +141,8 @@ jQuery.fn.extend({
 
 	before: function() {
 		if ( !isDisconnected( this[0] ) ) {
-			return this.domManip(arguments, false, function( elem ) {
-				this.parentNode.insertBefore( elem, this );
+			return this.domManip(arguments, false, function( newElem, existing ) {
+				jQuery.before( existing, newElem );
 			});
 		}
 
@@ -154,8 +154,8 @@ jQuery.fn.extend({
 
 	after: function() {
 		if ( !isDisconnected( this[0] ) ) {
-			return this.domManip(arguments, false, function( elem ) {
-				this.parentNode.insertBefore( elem, this.nextSibling );
+			return this.domManip(arguments, false, function( newElem, existing ) {
+				jQuery.after( existing, newElem );
 			});
 		}
 
@@ -247,6 +247,14 @@ jQuery.fn.extend({
 });
 
 jQuery.extend({
+	before: function( elem, insert ) {
+		elem.parentNode.insertBefore( insert, elem );
+	},
+
+	after: function( elem, insert ) {
+		elem.parentNode.insertBefore( insert, elem.nextSibling );
+	},
+
 	detach: function( elem ) {
 		jQuery.remove( elem, true );
 	},
@@ -360,7 +368,7 @@ jQuery.extend({
 
 		if ( jQuery.isFunction(value) ) {
 			return jQuery.each(set, function(i) {
-				args[0] = value.call( this, i, table ? jQuery.html(set) : undefined );
+				args[0] = value.call( this, i, table ? jQuery.html(set) : this );
 				jQuery.domManip( [this], args, table, callback );
 			});
 		}
@@ -387,7 +395,8 @@ jQuery.extend({
 							set[i],
 						i === iNoClone ?
 							fragment :
-							jQuery.clone( fragment, true, true )
+							jQuery.clone( fragment, true, true ),
+						set[i]
 					);
 				}
 			}
