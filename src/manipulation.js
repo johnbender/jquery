@@ -304,14 +304,13 @@ jQuery.extend({
 		return elem;
 	},
 
+
+	// TODO sort out collection based methods, and possible
+	//      additional abstractions
 	getHtml: function( elem ) {
 		return elem.nodeType === 1 ?
 			elem.innerHTML.replace( rinlinejQuery, "" ) :
 			undefined;
-	},
-
-	setHtml: function( elem, value ) {
-		jQuery.html( [elem], value );
 	},
 
 	html: function( set, value ) {
