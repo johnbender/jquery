@@ -119,9 +119,7 @@ jQuery.fn.extend({
 
 	unwrap: function() {
 		return this.parent().each(function() {
-			if ( !jQuery.nodeName( this, "body" ) ) {
-				jQuery( this ).replaceWith( this.childNodes );
-			}
+			jQuery.unwrap( this );
 		}).end();
 	},
 
@@ -236,6 +234,12 @@ jQuery.fn.extend({
 });
 
 jQuery.extend({
+	unwrap: function( elem ) {
+		if ( !jQuery.nodeName( elem, "body" ) ) {
+			jQuery.replaceWith( elem, elem.childNodes );
+		}
+	},
+
 	replaceWith: function( elem, value ) {
 		var next = elem.nextSibling,
 			parent = elem.parentNode;
