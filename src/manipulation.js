@@ -132,10 +132,8 @@ jQuery.fn.extend({
 	},
 
 	prepend: function() {
-		return this.domManip(arguments, true, function( elem, prepend ) {
-			if ( this.nodeType === 1 || this.nodeType === 11 ) {
-				this.insertBefore( elem, this.firstChild );
-			}
+		return this.domManip(arguments, true, function( prepend, elem ) {
+			jQuery.prepend( elem, prepend );
 		});
 	},
 
@@ -273,6 +271,12 @@ jQuery.extend({
 	append: function( elem, append ) {
 		if ( elem.nodeType === 1 || elem.nodeType === 11 ) {
 			elem.appendChild( append );
+		}
+	},
+
+	prepend: function( elem, prepend ) {
+		if ( elem.nodeType === 1 || elem.nodeType === 11 ) {
+			elem.insertBefore( prepend, elem.firstChild );
 		}
 	},
 
