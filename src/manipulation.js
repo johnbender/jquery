@@ -126,13 +126,13 @@ jQuery.fn.extend({
 	},
 
 	append: function() {
-		var args = Array.prototype.slice.call( arguments );
-		args.unshift( this );
-		return jQuery.append.apply( this, args );
+		return this.domManip(arguments, true, function( append, elem ) {
+			jQuery.append( elem, append );
+		});
 	},
 
 	prepend: function() {
-		return this.domManip(arguments, true, function( elem ) {
+		return this.domManip(arguments, true, function( elem, prepend ) {
 			if ( this.nodeType === 1 || this.nodeType === 11 ) {
 				this.insertBefore( elem, this.firstChild );
 			}
@@ -270,14 +270,10 @@ jQuery.extend({
 		}
 	},
 
-	append: function( set, a, b, c ) {
-		var args = Array.prototype.slice.call( arguments, 1 );
-
-		return jQuery.domManip(arguments[0], args, true, function( elem ) {
-			if ( this.nodeType === 1 || this.nodeType === 11 ) {
-				this.appendChild( elem );
-			}
-		});
+	append: function( elem, append ) {
+		if ( elem.nodeType === 1 || elem.nodeType === 11 ) {
+			elem.appendChild( append );
+		}
 	},
 
 	empty: function( elem ) {
@@ -344,7 +340,9 @@ jQuery.extend({
 					jQuery.empty(this[i] || {});
 				}
 
-				jQuery.append( set, value );
+				jQuery.domManip(set, [value], true, function( elem, existing ) {
+					jQuery.append( existing, elem );
+				});
 			}
 		}, null, value, arguments.length - 1);
 	},
