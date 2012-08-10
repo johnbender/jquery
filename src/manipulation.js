@@ -74,28 +74,10 @@ jQuery.fn.extend({
 			var wrap = jQuery( html, this[0].ownerDocument ).eq(0).clone(true),
 				elem = this[0];
 
-			if ( elem.parentNode ) {
-				wrap.each(function() {
-					jQuery.before(elem, this);
-				});
-			}
-
-			// scope the jquery object
 			set = this;
 
 			wrap.each(function() {
-				var elem = this;
-
-				// find the inner most element
-				while ( elem.firstChild && elem.firstChild.nodeType === 1 ) {
-					elem = elem.firstChild;
-				}
-
-				// append each element of the jquery object set
-				// to the wrapper's innermost child
-				set.each(function() {
-					jQuery.append( elem, this );
-				});
+				jQuery.wrapAll( set, this );
 			});
 		}
 
@@ -251,7 +233,6 @@ jQuery.extend({
 		jQuery.wrapAll( [elem], wrap );
 	},
 
-	// TODO decide if wrapAll should be included in the "Core" api
 	wrapAll: function( elems, wrap ) {
 		var l = elems.length;
 
@@ -262,6 +243,11 @@ jQuery.extend({
 
 		if ( elems[0].parentNode ) {
 			jQuery.before( elems[0], wrap );
+		}
+
+		// innermost child element for appending the wrapped content
+		while ( wrap.firstChild && wrap.firstChild.nodeType === 1 ) {
+			wrap = wrap.firstChild;
 		}
 
 		for( var i = 0; i < l; i++ ) {
