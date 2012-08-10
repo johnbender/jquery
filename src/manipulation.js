@@ -61,6 +61,8 @@ jQuery.fn.extend({
 	},
 
 	wrapAll: function( html ) {
+		var set;
+
 		if ( jQuery.isFunction( html ) ) {
 			return this.each(function(i) {
 				jQuery(this).wrapAll( html.call(this, i) );
@@ -69,21 +71,32 @@ jQuery.fn.extend({
 
 		if ( this[0] ) {
 			// The elements to wrap the target around
-			var wrap = jQuery( html, this[0].ownerDocument ).eq(0).clone(true);
+			var wrap = jQuery( html, this[0].ownerDocument ).eq(0).clone(true),
+				elem = this[0];
 
-			if ( this[0].parentNode ) {
-				wrap.insertBefore( this[0] );
+			if ( elem.parentNode ) {
+				wrap.each(function() {
+					jQuery.before(elem, this);
+				});
 			}
 
-			wrap.map(function() {
+			// scope the jquery object
+			set = this;
+
+			wrap.each(function() {
 				var elem = this;
 
+				// find the inner most element
 				while ( elem.firstChild && elem.firstChild.nodeType === 1 ) {
 					elem = elem.firstChild;
 				}
 
-				return elem;
-			}).append( this );
+				// append each element of the jquery object set
+				// to the wrapper's innermost child
+				set.each(function() {
+					jQuery.append( elem, this );
+				});
+			});
 		}
 
 		return this;
@@ -234,6 +247,28 @@ jQuery.fn.extend({
 });
 
 jQuery.extend({
+	wrap: function( elem, wrap ) {
+		jQuery.wrapAll( [elem], wrap );
+	},
+
+	// TODO decide if wrapAll should be included in the "Core" api
+	wrapAll: function( elems, wrap ) {
+		var l = elems.length;
+
+		// if the set is empty bail
+		if( !l ){
+			return;
+		}
+
+		if ( elems[0].parentNode ) {
+			jQuery.before( elems[0], wrap );
+		}
+
+		for( var i = 0; i < l; i++ ) {
+			jQuery.append( wrap, elems[i] );
+		}
+	},
+
 	unwrap: function( elem ) {
 		if ( !jQuery.nodeName( elem, "body" ) ) {
 			jQuery.replaceWith( elem, elem.childNodes );
