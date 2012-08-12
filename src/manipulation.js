@@ -119,22 +119,16 @@ jQuery.fn.extend({
 	},
 
 	append: function() {
-		return this.domManip(arguments, true, function( elem, append ) {
-			jQuery.append( elem, append );
-		});
+		return this.domManip(arguments, true, jQuery.append);
 	},
 
 	prepend: function() {
-		return this.domManip(arguments, true, function( elem, prepend ) {
-			jQuery.prepend( elem, prepend );
-		});
+		return this.domManip(arguments, true,	jQuery.prepend);
 	},
 
 	before: function() {
 		if ( !isDisconnected( this[0] ) ) {
-			return this.domManip(arguments, false, function( existing, newElem ) {
-				jQuery.before( existing, newElem );
-			});
+			return this.domManip(arguments, false, jQuery.before);
 		}
 
 		if ( arguments.length ) {
@@ -145,9 +139,7 @@ jQuery.fn.extend({
 
 	after: function() {
 		if ( !isDisconnected( this[0] ) ) {
-			return this.domManip(arguments, false, function( existing, newElem ) {
-				jQuery.after( existing, newElem );
-			});
+			return this.domManip(arguments, false, jQuery.after);
 		}
 
 		if ( arguments.length ) {
@@ -269,14 +261,10 @@ jQuery.extend({
 
 		if ( next ) {
 			// TODO deal with the text node directly to avoid dom manip
-			jQuery.domManip([next], [value], false, function( elem, before ) {
-				jQuery.before( elem, before );
-			});
+			jQuery.domManip([next], [value], false, jQuery.before);
 		} else {
 			// TODO deal with the text node directly to avoid dom manip
-			jQuery.domManip([parent], [value], false, function( elem, append ) {
-				jQuery.append( elem, append );
-			});
+			jQuery.domManip([parent], [value], false, jQuery.append);
 		}
 	},
 
@@ -378,9 +366,7 @@ jQuery.extend({
 					jQuery.empty(this[i] || {});
 				}
 
-				jQuery.domManip(set, [value], true, function( existing, elem ) {
-					jQuery.append( existing, elem );
-				});
+				jQuery.domManip(set, [value], true,	jQuery.append);
 			}
 		}, null, value, arguments.length - 1);
 	},
