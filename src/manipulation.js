@@ -119,20 +119,20 @@ jQuery.fn.extend({
 	},
 
 	append: function() {
-		return this.domManip(arguments, true, function( append, elem ) {
+		return this.domManip(arguments, true, function( elem, append ) {
 			jQuery.append( elem, append );
 		});
 	},
 
 	prepend: function() {
-		return this.domManip(arguments, true, function( prepend, elem ) {
+		return this.domManip(arguments, true, function( elem, prepend ) {
 			jQuery.prepend( elem, prepend );
 		});
 	},
 
 	before: function() {
 		if ( !isDisconnected( this[0] ) ) {
-			return this.domManip(arguments, false, function( newElem, existing ) {
+			return this.domManip(arguments, false, function( existing, newElem ) {
 				jQuery.before( existing, newElem );
 			});
 		}
@@ -145,7 +145,7 @@ jQuery.fn.extend({
 
 	after: function() {
 		if ( !isDisconnected( this[0] ) ) {
-			return this.domManip(arguments, false, function( newElem, existing ) {
+			return this.domManip(arguments, false, function( existing, newElem ) {
 				jQuery.after( existing, newElem );
 			});
 		}
@@ -269,12 +269,12 @@ jQuery.extend({
 
 		if ( next ) {
 			// TODO deal with the text node directly to avoid dom manip
-			jQuery.domManip([next], [value], false, function( before, elem ) {
+			jQuery.domManip([next], [value], false, function( elem, before ) {
 				jQuery.before( elem, before );
 			});
 		} else {
 			// TODO deal with the text node directly to avoid dom manip
-			jQuery.domManip([parent], [value], false, function( append, elem ) {
+			jQuery.domManip([parent], [value], false, function( elem, append ) {
 				jQuery.append( elem, append );
 			});
 		}
@@ -378,7 +378,7 @@ jQuery.extend({
 					jQuery.empty(this[i] || {});
 				}
 
-				jQuery.domManip(set, [value], true, function( elem, existing ) {
+				jQuery.domManip(set, [value], true, function( existing, elem ) {
 					jQuery.append( existing, elem );
 				});
 			}
@@ -425,14 +425,13 @@ jQuery.extend({
 				// being emptied incorrectly in certain situations (#8070).
 				// Fragments from the fragment cache must always be cloned and never used in place.
 				for ( iNoClone = results.cacheable || l - 1; i < l; i++ ) {
-					callback.call(
+					callback(
 						table && jQuery.nodeName( set[i], "table" ) ?
 							findOrAppend( set[i], "tbody" ) :
 							set[i],
 						i === iNoClone ?
 							fragment :
-							jQuery.clone( fragment, true, true ),
-						set[i]
+							jQuery.clone( fragment, true, true )
 					);
 				}
 			}
