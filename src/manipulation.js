@@ -123,7 +123,7 @@ jQuery.fn.extend({
 	},
 
 	prepend: function() {
-		return this.domManip(arguments, true,	jQuery.prepend);
+		return this.domManip(arguments, true, jQuery.prepend);
 	},
 
 	before: function() {
