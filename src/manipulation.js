@@ -155,7 +155,12 @@ jQuery.fn.extend({
 
 		for ( ; (elem = this[i]) != null; i++ ) {
 			if ( !selector || jQuery.filter( selector, [ elem ] ).length ) {
-				jQuery.remove( elem, keepData );
+				if ( !keepData && elem.nodeType === 1 ) {
+					jQuery.cleanData( elem.getElementsByTagName("*") );
+					jQuery.cleanData( [ elem ] );
+				}
+
+				jQuery.remove( elem );
 			}
 		}
 
@@ -280,12 +285,7 @@ jQuery.extend({
 		jQuery.remove( elem, true );
 	},
 
-	remove: function( elem, keepData ) {
-		if ( !keepData && elem.nodeType === 1 ) {
-			jQuery.cleanData( elem.getElementsByTagName("*") );
-			jQuery.cleanData( [ elem ] );
-		}
-
+	remove: function( elem ) {
 		if ( elem.parentNode ) {
 			elem.parentNode.removeChild( elem );
 		}
