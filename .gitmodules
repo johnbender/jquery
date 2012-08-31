@@ -4,3 +4,6 @@
 [submodule "test/qunit"]
 	path = test/qunit
 	url = git://github.com/jquery/qunit.git
+[submodule "src/wield"]
+	path = src/wield
+	url = git@github.com:johnbender/wield.git
