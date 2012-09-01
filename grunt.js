@@ -77,6 +77,7 @@ module.exports = function( grunt ) {
 				{ flag: "dimensions", src: "src/dimensions.js", needs: ["css"] },
 
 				"src/exports.js",
+				"src/wield/compiled/wield.jquery.js",
 				"src/outro.js"
 			]
 		},
