@@ -77,7 +77,7 @@ jQuery.fn.extend({
 			set = this;
 
 			wrap.each(function() {
-				jQuery.wrapAll( set, this );
+				jQuery.dom.wrapAll( set, this );
 			});
 		}
 
@@ -114,21 +114,21 @@ jQuery.fn.extend({
 
 	unwrap: function() {
 		return this.parent().each(function() {
-			jQuery.unwrap( this );
+			jQuery.dom.unwrap( this );
 		}).end();
 	},
 
 	append: function() {
-		return this.domManip(arguments, true, jQuery.append);
+		return this.domManip(arguments, true, jQuery.dom.append);
 	},
 
 	prepend: function() {
-		return this.domManip(arguments, true, jQuery.prepend);
+		return this.domManip(arguments, true, jQuery.dom.prepend);
 	},
 
 	before: function() {
 		if ( !isDisconnected( this[0] ) ) {
-			return this.domManip(arguments, false, jQuery.before);
+			return this.domManip(arguments, false, jQuery.dom.before);
 		}
 
 		if ( arguments.length ) {
@@ -139,7 +139,7 @@ jQuery.fn.extend({
 
 	after: function() {
 		if ( !isDisconnected( this[0] ) ) {
-			return this.domManip(arguments, false, jQuery.after);
+			return this.domManip(arguments, false, jQuery.dom.after);
 		}
 
 		if ( arguments.length ) {
@@ -160,7 +160,7 @@ jQuery.fn.extend({
 					jQuery.cleanData( [ elem ] );
 				}
 
-				jQuery.remove( elem );
+				jQuery.dom.remove( elem );
 			}
 		}
 
@@ -172,7 +172,7 @@ jQuery.fn.extend({
 			i = 0;
 
 		for ( ; (elem = this[i]) != null; i++ ) {
-			jQuery.empty( elem );
+			jQuery.dom.empty( elem );
 		}
 
 		return this;
@@ -203,7 +203,7 @@ jQuery.fn.extend({
 			}
 
 			return this.each(function() {
-				jQuery.replaceWith( this, value );
+				jQuery.dom.replaceWith( this, value );
 			});
 		}
 
@@ -217,17 +217,17 @@ jQuery.fn.extend({
 	},
 
 	domManip: function( args, table, callback ) {
-		return jQuery.domManip( this, args, table, callback );
+		return jQuery.dom.domManip( this, args, table, callback );
 	},
 
 	html: function( value ) {
-		return arguments.length === 0 ? jQuery.html( this ) : jQuery.html( this, value );
+		return arguments.length === 0 ? jQuery.dom.html( this ) : jQuery.dom.html( this, value );
 	}
 });
 
-jQuery.extend({
+jQuery.dom = {
 	wrap: function( elem, wrap ) {
-		jQuery.wrapAll( [elem], wrap );
+		jQuery.dom.wrapAll( [elem], wrap );
 	},
 
 	wrapAll: function( elems, wrap ) {
@@ -239,7 +239,7 @@ jQuery.extend({
 		}
 
 		if ( elems[0].parentNode ) {
-			jQuery.before( elems[0], wrap );
+			jQuery.dom.before( elems[0], wrap );
 		}
 
 		// innermost child element for appending the wrapped content
@@ -248,13 +248,13 @@ jQuery.extend({
 		}
 
 		for( var i = 0; i < l; i++ ) {
-			jQuery.append( wrap, elems[i] );
+			jQuery.dom.append( wrap, elems[i] );
 		}
 	},
 
 	unwrap: function( elem ) {
 		if ( !jQuery.nodeName( elem, "body" ) ) {
-			jQuery.replaceWith( elem, elem.childNodes );
+			jQuery.dom.replaceWith( elem, elem.childNodes );
 		}
 	},
 
@@ -262,14 +262,14 @@ jQuery.extend({
 		var next = elem.nextSibling,
 			parent = elem.parentNode;
 
-		jQuery.remove( elem );
+		jQuery.dom.remove( elem );
 
 		if ( next ) {
 			// TODO deal with the text node directly to avoid dom manip
-			jQuery.domManip([next], [value], false, jQuery.before);
+			jQuery.dom.domManip([next], [value], false, jQuery.dom.before);
 		} else {
 			// TODO deal with the text node directly to avoid dom manip
-			jQuery.domManip([parent], [value], false, jQuery.append);
+			jQuery.dom.domManip([parent], [value], false, jQuery.dom.append);
 		}
 	},
 
@@ -282,7 +282,7 @@ jQuery.extend({
 	},
 
 	detach: function( elem ) {
-		jQuery.remove( elem, true );
+		jQuery.dom.remove( elem, true );
 	},
 
 	remove: function( elem ) {
@@ -333,7 +333,7 @@ jQuery.extend({
 				l = this.length;
 
 			if ( value === undefined ) {
-				return jQuery.getHtml( elem );
+				return jQuery.dom.getHtml( elem );
 			}
 
 			// See if we can take a shortcut and just use innerHTML
@@ -363,10 +363,10 @@ jQuery.extend({
 			if ( elem ) {
 				for (i = 0; i < l; i++ ) {
 					// clean each element in the set
-					jQuery.empty(this[i] || {});
+					jQuery.dom.empty(this[i] || {});
 				}
 
-				jQuery.domManip(set, [value], true,	jQuery.append);
+				jQuery.dom.domManip(set, [value], true,	jQuery.dom.append);
 			}
 		}, null, value, arguments.length - 1);
 	},
@@ -384,14 +384,14 @@ jQuery.extend({
 		// We can't cloneNode fragments that contain checked, in WebKit
 		if ( !jQuery.support.checkClone && l > 1 && typeof value === "string" && rchecked.test( value ) ) {
 			return jQuery.each(set, function() {
-				jQuery.domManip( [this], args, table, callback );
+				jQuery.dom.domManip( [this], args, table, callback );
 			});
 		}
 
 		if ( jQuery.isFunction(value) ) {
 			return jQuery.each(set, function(i) {
-				args[0] = value.call( this, i, table ? jQuery.html(set) : this );
-				jQuery.domManip( [this], args, table, callback );
+				args[0] = value.call( this, i, table ? jQuery.dom.html(set) : this );
+				jQuery.dom.domManip( [this], args, table, callback );
 			});
 		}
 
@@ -453,7 +453,9 @@ jQuery.extend({
 
 		return set;
 	}
-});
+};
+
+jQuery.extend( jQuery.dom );
 
 function findOrAppend( elem, tag ) {
 	return elem.getElementsByTagName( tag )[0] || elem.appendChild( elem.ownerDocument.createElement( tag ) );
