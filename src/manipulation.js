@@ -174,6 +174,11 @@ jQuery.fn.extend({
 			i = 0;
 
 		for ( ; (elem = this[i]) != null; i++ ) {
+			// Remove element nodes and prevent memory leaks
+			if ( elem.nodeType === 1 ) {
+				jQuery.cleanData( elem.getElementsByTagName("*") );
+			}
+
 			jQuery.dom.empty( elem );
 		}
 
@@ -309,10 +314,6 @@ jQuery.dom = {
 	},
 
 	empty: function( elem ) {
-		// Remove element nodes and prevent memory leaks
-		if ( elem.nodeType === 1 ) {
-			jQuery.cleanData( elem.getElementsByTagName("*") );
-		}
 
 		// Remove any remaining nodes
 		while ( elem.firstChild ) {
