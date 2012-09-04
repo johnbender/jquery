@@ -114,7 +114,9 @@ jQuery.fn.extend({
 
 	unwrap: function() {
 		return this.parent().each(function() {
-			jQuery.dom.unwrap( this );
+			if( !jQuery.nodeName(this, "body") ) {
+				jQuery.dom.unwrap( this );
+			}
 		}).end();
 	},
 
@@ -203,7 +205,7 @@ jQuery.fn.extend({
 			}
 
 			return this.each(function() {
-				jQuery.dom.replaceWith( this, value );
+				jQuery.dom.domManip( [this], [value], false, jQuery.dom.replaceWith );
 			});
 		}
 
@@ -252,10 +254,18 @@ jQuery.dom = {
 		}
 	},
 
-	unwrap: function( elem ) {
-		if ( !jQuery.nodeName( elem, "body" ) ) {
-			jQuery.dom.replaceWith( elem, elem.childNodes );
-		}
+	unwrap: function( parent ) {
+		jQuery.dom.extract( parent );
+		jQuery.dom.remove( parent );
+	},
+
+	extract: function( parent ) {
+		var children = parent.childNodes,
+			l = children.length;
+
+			while( l-- ){
+				jQuery.dom.after( parent, children[l] );
+			}
 	},
 
 	replaceWith: function( elem, value ) {
@@ -265,11 +275,10 @@ jQuery.dom = {
 		jQuery.dom.remove( elem );
 
 		if ( next ) {
-			// TODO deal with the text node directly to avoid dom manip
-			jQuery.dom.domManip([next], [value], false, jQuery.dom.before);
+			jQuery.dom.before( elem, value );
 		} else {
 			// TODO deal with the text node directly to avoid dom manip
-			jQuery.dom.domManip([parent], [value], false, jQuery.dom.append);
+			jQuery.dom.append( parent, value );
 		}
 	},
 
