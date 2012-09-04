@@ -255,17 +255,13 @@ jQuery.dom = {
 	},
 
 	unwrap: function( parent ) {
-		jQuery.dom.extract( parent );
+		var children = parent.childNodes, l = children.length;
+
+		while( l-- ){
+			jQuery.dom.after( parent, children[l] );
+		}
+
 		jQuery.dom.remove( parent );
-	},
-
-	extract: function( parent ) {
-		var children = parent.childNodes,
-			l = children.length;
-
-			while( l-- ){
-				jQuery.dom.after( parent, children[l] );
-			}
 	},
 
 	replaceWith: function( elem, value ) {
