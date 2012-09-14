@@ -432,19 +432,14 @@ jQuery.extend({
 		if ( value !== undefined ) {
 			if ( hooks && "set" in hooks && (ret = hooks.set( elem, value, name )) !== undefined ) {
 				return ret;
-
-			} else {
-				return ( elem[ name ] = value );
 			}
-
 		} else {
 			if ( hooks && "get" in hooks && (ret = hooks.get( elem, name )) !== null ) {
 				return ret;
-
-			} else {
-				return elem[ name ];
 			}
 		}
+
+		return jQuery.dom.prop( elem, name, value );
 	},
 
 	propHooks: {
