@@ -313,24 +313,17 @@ jQuery.extend({
 		}
 
 		if ( value !== undefined ) {
-
 			if ( value === null ) {
 				jQuery.removeAttr( elem, name );
 				return;
-
 			} else if ( hooks && "set" in hooks && notxml && (ret = hooks.set( elem, value, name )) !== undefined ) {
 				return ret;
-
-			} else {
-				return jQuery.dom.attr( elem, name, "" + value );
 			}
-
 		} else if ( hooks && "get" in hooks && notxml && (ret = hooks.get( elem, name )) !== null ) {
 			return ret;
-
-		} else {
-			return jQuery.dom.attr( elem, name );
 		}
+
+		return jQuery.dom.attr( elem, name, value );
 	},
 
 	removeAttr: function( elem, value ) {
