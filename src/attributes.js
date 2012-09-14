@@ -300,7 +300,7 @@ jQuery.extend({
 
 		// Fallback to prop when attributes are not supported
 		if ( typeof elem.getAttribute === "undefined" ) {
-			return jQuery.prop( elem, name, value );
+			return jQuery.dom.prop( elem, name, value );
 		}
 
 		notxml = nType !== 1 || !jQuery.isXMLDoc( elem );
