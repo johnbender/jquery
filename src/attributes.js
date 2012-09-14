@@ -322,21 +322,14 @@ jQuery.extend({
 				return ret;
 
 			} else {
-				elem.setAttribute( name, "" + value );
-				return value;
+				return jQuery.dom.attr( elem, name, "" + value );
 			}
 
 		} else if ( hooks && "get" in hooks && notxml && (ret = hooks.get( elem, name )) !== null ) {
 			return ret;
 
 		} else {
-
-			ret = elem.getAttribute( name );
-
-			// Non-existent attributes return null, we normalize to undefined
-			return ret === null ?
-				undefined :
-				ret;
+			return jQuery.dom.attr( elem, name );
 		}
 	},
 
