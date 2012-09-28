@@ -111,7 +111,7 @@ module.exports = function( grunt ) {
 				"<config:lint.grunt>", "<config:lint.tests>",
 				"src/**/*.js"
 			],
-			tasks: "dev"
+			tasks: "dev qunit"
 		},
 		uglify: {}
 	});
